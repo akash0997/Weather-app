@@ -1,6 +1,6 @@
 pipeline{
     agent any
-     // environment {
+    //   environment {
         
     //      FLASK_APP='hello_flask.py'
     //      FLASK_ENV='production'
@@ -18,7 +18,7 @@ pipeline{
                  checkout([$class: 'GitSCM',
                  branches: [[name: 'origin/master']],
                  extensions: [[$class: 'WipeWorkspace']],
-                 userRemoteConfigs: [[url: 'https://github.com/Nimisha-97/Weather-app.git']]
+                 //userRemoteConfigs: [[url: 'https://github.com/Nimisha-97/Weather-app.git']]
                 ])
             }
         }
@@ -32,26 +32,27 @@ pipeline{
             stage ('zip'){
                steps
                {
-                 sh 'zip -r weather.zip ./weather'
+                 sh 'zip -r weather-${BUILD_NUMBER}.zip ./weather'
             }
         }
-       stage ( 'nexus')
+       stage ( 'Artifact to Nexus')
         {
             steps{
                 withCredentials([usernamePassword(credentialsId: 'sudipa_nexus', passwordVariable: 'pass', usernameVariable: 'usr')]){
-                sh 'curl -u ${usr}:${pass} --upload-file weather.zip http://3.17.164.37:8081/nexus/content/repositories/devopstraining/Nimisha-python/weather-${BUILD_NUMBER}.zip'
+                sh 'curl -u ${usr}:${pass} --upload-file weather-${BUILD_NUMBER}.zip http://3.17.164.37:8081/nexus/content/repositories/devopstraining/Nimisha-python/weather-${BUILD_NUMBER}.zip'
             }
             }
         }
-        stage ('Deploy') {
+        /*stage ('Deploy') {
             steps {
                withCredentials([file(credentialsId: 'deployment-server', variable: 'secret_key_for_tomcat')]) {
-                  sh 'scp -i ${secret_key_for_tomcat} weather.zip ubuntu@18.224.182.74:~/'
-                  sh 'ssh -i ${secret_key_for_tomcat} ubuntu@18.224.182.74 "cd ~;unzip weather.zip -d ./weather;"'
-                  sh 'ssh -i ${secret_key_for_tomcat} ubuntu@18.224.182.74 "cd ~;cd weather;cd weather;pm2 start "python api.py";"'
+                 //sh 'scp -i ${secret_key_for_tomcat} weather-${BUILD_NUMBER}.zip ubuntu@18.224.182.74:~/'
+                  //sh 'ssh -i ${secret_key_for_tomcat} ubuntu@18.224.182.74 "cd ~;unzip weather-${BUILD_NUMBER}.zip -d ./weather-${BUILD_NUMBER};"'
+                  //sh 'ssh -i ${secret_key_for_tomcat} ubuntu@18.224.182.74 "cd ~;cd weather-${BUILD_NUMBER};cd weather-${BUILD_NUMBER};npm install;pip install -r requirements.txt;npm run build;pm2 start "python api.py";"'
+               sh 'ssh -i ${secret_key_for_tomcat} ubuntu@18.224.182.74 "cd ~;cd weather;cd weather;pm2 list;"'
                }
             }
-        }
+        }*/
  }
     post {
         success {
