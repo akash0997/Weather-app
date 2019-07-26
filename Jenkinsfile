@@ -10,7 +10,7 @@ pipeline{
     //     pollSCM('* * * * *')
     // }
     
-    stages{
+    /*stages{
         stage('checkout'){
             steps{
                  //withCredentials([string(credentialsId: 'prgit', variable: 'git')]) {
@@ -21,7 +21,7 @@ pipeline{
                  //userRemoteConfigs: [[url: 'https://github.com/Nimisha-97/Weather-app.git']]
                 ])
             }
-        }
+        }*/
        
     //  stage ('dependencies'){
     //         steps{
