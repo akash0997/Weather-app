@@ -10,8 +10,8 @@ pipeline{
     //     pollSCM('* * * * *')
     // }
     
-    /*stages{
-        stage('checkout'){
+    stages{
+        /*stage('checkout'){
             steps{
                  //withCredentials([string(credentialsId: 'prgit', variable: 'git')]) {
                  //echo "My password is '${git}'!"
